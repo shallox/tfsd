@@ -3,17 +3,16 @@
 
 #### Opening Questions ####
 echo "###TFSD Firewall/Router deployment script by Killer Panda###"
-echo "          #### Alpha v0.0.1 ####"
+echo "          #### Beta v0.1.5 ####"
 echo "This setup requires 2 NIC's in order to function, please specify your WAN facing NIC below"
 read nwan
 echo "Please specify your LAN facing NIC below"
 read nlan
-echo "Do you need to forward any ports? (y/n)"
+echo "Do you need to forward any ports? y/n"
 read portf
 
 	if [ $portf = "y" ]
 		then
-main() {
 			echo "IP or FQDN of server to forward packets to"
 			read fwip
 			echo "Wan port"
@@ -23,40 +22,19 @@ main() {
 			echo "Enter the web address eg: testdomain.com"
 			read weba
 			echo "Enter the protocaol"
-			read prt
-	}
-validate_str() {
+			read pr
 
 echo "iptables -t nat -A PREROUTING -p "$prt" -d "$weba" --dport "$fwwp" -j DNAT --to-destination "$fwip":"$fwlp" would your string is listed above, would you like to proceed (y/n)"
-	read prtf
+echo "Would you like commit this string? y/n"
+read prtf
 
-	}
-
-validate_outp() {
-
-	if [ $prtf = "n" ]
+	if [ $prtf = "y" ]
 	then
-		main
-	else
 	iptables -t nat -A PREROUTING -p "$prt" -d "$weba" --dport "$fwwp" -j DNAT --to-destination "$fwip":"$fwlp"
-fi
+	else
+	fi
 
-	}
-
-redo() {
-echo "Would you like to forward another port (y/n)?
-read pfans
-	if [ "$pfans" = "y" ]
-	then
-		main
-fi
-
-}
-
-end() {
-	}
-else
-fi
+	
 
 
 echo "We will now create a table to interogate packets, enter a name for this table EG: sniffer"
@@ -103,7 +81,6 @@ iptables -A "$icc" -i "$nwan" -p udp --dport 123 -m state --state NEW,RELATED,ES
 
 
 ## Ping requests ##
-ping() {
 echo "Allow gateway to respond to ping requests? y n"
 read preq
 	if [ $preq = "y" ]
@@ -112,7 +89,6 @@ read preq
 	else
 	fi
 
-	}
 ## dns ##
 iptables -A "$icc" -i "$nwan" -p udp --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT  ## DNS requests in on wan add ##
 
